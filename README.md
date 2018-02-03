@@ -26,6 +26,10 @@ def o #F00
 [_____xxxx_____]
 ```
 
+```bash
+[node] crisgonc pokeball.cgn
+```
+
 CSS
 ```css
  .draw {
