@@ -3,7 +3,7 @@ A box-shadow-based pixel images generator<br>
 Inpired by [Desenhando com box shadow](https://crisgon.github.io/posts/Desenhando-com-box-shadow/)
 
 Input
-```crisgon
+```python
 size 10
 
 def _ #FFF
@@ -44,4 +44,4 @@ Output
 ```
 
 Rendered
-![Pokeball][pokeball.png]
+![Pokeball](pokeball.png)
