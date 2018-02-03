@@ -2,7 +2,7 @@
 A box-shadow-based pixel images generator<br>
 Inpired by [Desenhando com box shadow](https://crisgon.github.io/posts/Desenhando-com-box-shadow/)
 
-Input
+#### pokeball.cgn
 ```python
 size 10
 
@@ -26,7 +26,7 @@ def o #F00
 [_____xxxx_____]
 ```
 
-Output
+CSS
 ```css
  .draw {
    width: 10px;
@@ -43,5 +43,4 @@ Output
 }
 ```
 
-Rendered
 ![Pokeball](pokeball.png)
