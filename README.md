@@ -1,6 +1,6 @@
 # crisgon
-A box-shadow-based pixel images generator<br>
-Inpired by [Desenhando com box shadow](https://crisgon.github.io/posts/Desenhando-com-box-shadow/)
+A box-shadow-based pixel images lang/compiler<br>
+Inspired by [desenhando com box shadow](https://crisgon.github.io/posts/Desenhando-com-box-shadow/)
 
 #### pokeball.cgn
 ```python
