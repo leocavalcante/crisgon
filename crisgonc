@@ -1,0 +1,107 @@
+#!/bin/node
+const fs = require('fs')
+
+const filename = process.argv[2]
+const text = fs.readFileSync(filename, 'utf8')
+
+const T_WS = ' '
+const T_NUL = l => l === '\r' || l === '\n' || l === T_WS
+const T_INT = 'int'
+const T_SIZE = 'size'
+const T_DEF = 'def'
+const T_HASH = '#'
+const T_ROW_START = '['
+const T_ROW_END = ']'
+const T_CALL = 'call'
+const T_STR = 'str'
+const T_ROW = 'row'
+const T_ID = 'id'
+
+const token = (type, value) => ({ type, value })
+const parse = (input, index = 0, acc = '', tokens = []) => {
+  if (index >= input.length) {
+    return tokens
+  }
+
+  const prev = index > 0 ? input[index - 1] : null
+  const curr = input[index]
+  const next = index < input.length ? input[index + 1] : null
+  const lexeme = acc + curr
+
+  if (T_NUL(curr)) {
+    return parse(input, index + 1, '', tokens)
+  }
+
+  if (lexeme === T_SIZE && next === T_WS) {
+    return parse(input, index + 2, '', [...tokens, token(T_CALL, T_SIZE)])
+  }
+
+  if (lexeme === T_DEF && next === T_WS) {
+    return parse(input, index + 2, '', [...tokens, token(T_CALL, T_DEF)])
+  }
+
+  if (parseInt(lexeme) && T_NUL(next)) {
+    return parse(input, index + 2, '', [...tokens, token(T_INT, parseInt(lexeme))])
+  }
+
+  if (lexeme[0] === T_HASH && T_NUL(next)) {
+    return parse(input, index + 2, '', [...tokens, token(T_STR, lexeme)])
+  }
+
+  if (lexeme[0] === T_ROW_START && next === T_ROW_END) {
+    return parse(input, index + 2, '', [...tokens, token(T_ROW, lexeme.substr(1))])
+  }
+
+  if (T_NUL(next)) {
+    return parse(input, index + 2, '', [...tokens, token(T_ID, lexeme)])
+  }
+
+  return parse(input, index + 1, lexeme, tokens)
+}
+
+const gen = (tokens, i = 0, ctx = { size: 0, defs: {}, grid: [] }) => {
+  if (i >= tokens.length) {
+    return exec(ctx)
+  }
+
+  const token0 = tokens[i]
+  const token1 = i < tokens.length ? tokens[i + 1] : null
+  const token2 = i < tokens.length - 1 ? tokens[i + 2] : null
+
+  if (token0.value === T_SIZE && token1.type === T_INT) {
+    return gen(tokens, i + 2, { ...ctx, size: token1.value })
+  }
+
+  if (token0.value === T_DEF && token1.type === T_ID && token2.type === T_STR) {
+    return gen(tokens, i + 3, { ...ctx, defs: { ...ctx.defs, [token1.value]: token2.value } })
+  }
+
+  if (token0.type === T_ROW) {
+    return gen(tokens, i + 1, { ...ctx, grid: [...ctx.grid, token0.value.split('')] })
+  }
+
+  return gen(tokens, i + 1, ctx)
+}
+
+const exec = ctx => {
+  const boxShadow = ctx.grid
+    .map((row, i) => row
+      .map((cell, j) => `${j * ctx.size}px ${i * ctx.size}px 0 ${ctx.defs[cell]}`))
+    .reduce((flat, arr) => flat.concat(arr), [])
+    .join(',')
+
+  return `
+    .draw {
+      width: ${ctx.size}px;
+      height: ${ctx.size}px;
+      background-color: ${ctx.defs[ctx.grid[0][0]]};
+      box-shadow: ${boxShadow};
+    }
+  `
+}
+
+const tokens = parse(text.split(''))
+const output = gen(tokens)
+
+//console.log(tokens)
+console.log(output)

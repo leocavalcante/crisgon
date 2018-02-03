@@ -1,0 +1,20 @@
+size 10
+
+def _ #FFF
+def x #000
+def o #F00
+
+[_____xxxx_____]
+[___xxooooxx___]
+[__xoooooooox__]
+[_xoooooooooox_]
+[_xoooooooooox_]
+[xoooooxxooooox]
+[xoooox__xoooox]
+[xxxxxx__xxxxxx]
+[x_____xx_____x]
+[_x__________x_]
+[_x__________x_]
+[__x________x__]
+[___xx____xx___]
+[_____xxxx_____]
